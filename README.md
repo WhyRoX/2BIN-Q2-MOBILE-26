@@ -19,3 +19,5 @@ Une fois ceci fait, vous pouvez lancer les tests d'une fiche précise avec:
 flutter test
 ````
 
+Test push all
+
