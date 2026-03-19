@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'home_screen.dart';
+
 const colors = {
   "red": Colors.red,
   "pink": Colors.pink,
@@ -46,53 +48,7 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(seedColor: getColorValue(color)),
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text("Tutoriel 3"),
-          backgroundColor: getColorValue(color).shade200,
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(32.0),
-          child: Column(
-            children: [
-              Expanded(
-                child: Center(
-                  child: Container(
-                    width: 100,
-                    height: 100,
-                    color: getColorValue(color),
-                  ),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    "red",
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Switch(
-                    value: color == "green",
-                    activeThumbColor: Colors.green,
-                    inactiveThumbColor: Colors.red,
-                    onChanged: (value) => setColor(value ? "green" : "red"),
-                  ),
-                  const Text(
-                    "green",
-                    style: TextStyle(
-                      color: Colors.green,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
+      home: HomeScreen(color: color, setColor: setColor),
     );
   }
 }
