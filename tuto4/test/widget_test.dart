@@ -86,7 +86,9 @@ void main() {
       expect(find.text('Second screen'), findsOneWidget);
     });
 
-    testWidgets('SecondScreen displays click count from first screen', (tester) async {
+    testWidgets('SecondScreen displays click count from first screen', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         const MaterialApp(home: SecondScreen(nbClicks: 42)),
       );

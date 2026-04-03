@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import 'click_view_model.dart';
+import '../view_models/click_view_model.dart';
 
 class FirstScreen extends StatelessWidget {
   const FirstScreen({super.key});

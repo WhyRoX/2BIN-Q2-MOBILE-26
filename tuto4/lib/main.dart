@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:tuto4/user_screen.dart';
-import 'click_view_model.dart';
-import 'second_screen.dart';
-import 'first_screen.dart';
+import 'package:tuto4/views/user_screen.dart';
+import 'view_models/click_view_model.dart';
+import 'views/second_screen.dart';
+import 'views/first_screen.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
 final _router = GoRouter(
