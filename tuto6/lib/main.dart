@@ -1,10 +1,18 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:path/path.dart';
+import 'package:provider/provider.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
+import 'package:tuto6/view_models/theme_viewmodel.dart';
 import 'package:tuto6/views/new_post.dart';
 import 'package:tuto6/views/post_list.dart';
 import 'package:tuto6/views/settings.dart';
 
+//main.dart
 void main() {
+  initDatabase();
   runApp(const MyApp());
 }
 
@@ -28,29 +36,64 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: _router,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+    return ChangeNotifierProvider<ThemeViewModel>(
+      create: (context) => ThemeViewModel(),
+      child: // Use the provider to get the theme
+      MaterialApp.router(
+        routerConfig: _router,
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          // This is the theme of your application.
+          //
+          // TRY THIS: Try running your application with "flutter run". You'll see
+          // the application has a purple toolbar. Then, without quitting the app,
+          // try changing the seedColor in the colorScheme below to Colors.green
+          // and then invoke "hot reload" (save your changes or press the "hot
+          // reload" button in a Flutter-supported IDE, or press "r" if you used
+          // the command line to start the app).
+          //
+          // Notice that the counter didn't reset back to zero; the application
+          // state is not lost during the reload. To reset the state, use hot
+          // restart instead.
+          //
+          // This works for code too, not just values: Most code changes can be
+          // tested with just a hot reload.
+          colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        ),
       ),
     );
   }
+}
+
+Future<Database> initDatabase() async {
+  // Initialize your database here
+  if (kIsWeb) {
+    WidgetsFlutterBinding.ensureInitialized();
+    databaseFactory = databaseFactoryFfiWeb; // sqflite web "hack"
+  }
+
+  var database = await openDatabase(
+    join(await getDatabasesPath(), 'test.db'),
+    version: 1,
+  );
+
+  await database.execute('DROP TABLE IF EXISTS Post');
+  await database.execute(
+    'CREATE TABLE Post(id INTEGER PRIMARY KEY, name TEXT, content TEXT)',
+  );
+  await database.insert('Post', <String, Object?>{
+    'name': 'Post 1',
+    'content': 'Content 1',
+  });
+  await database.insert('Post', <String, Object?>{
+    'name': 'Post 2',
+    'content': 'Content 2',
+  });
+
+  final records = await database.query('Post');
+  print(records);
+
+  return database;
 }
 
 class MyHomePage extends StatefulWidget {
