@@ -9,6 +9,7 @@ import 'package:tuto6/services/post_service.dart';
 import 'package:tuto6/view_models/post_view_model.dart';
 import 'package:tuto6/view_models/theme_viewmodel.dart';
 import 'package:tuto6/views/new_post.dart';
+import 'package:tuto6/views/post_detail.dart';
 import 'package:tuto6/views/post_list.dart';
 import 'package:tuto6/views/settings.dart';
 
@@ -23,6 +24,11 @@ final _router = GoRouter(
         GoRoute(path: 'new_post', builder: (context, state) => NewPost()),
         GoRoute(path: 'settings', builder: (context, state) => Settings()),
       ],
+    ),
+    GoRoute(
+      path: 'posts/:id',
+      builder: (context, state) =>
+          PostDetails(postId: state.pathParameters['id'] ?? ''),
     ),
   ],
 );
