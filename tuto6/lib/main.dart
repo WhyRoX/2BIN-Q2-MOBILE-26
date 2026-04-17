@@ -5,17 +5,14 @@ import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
+import 'package:tuto6/services/post_service.dart';
+import 'package:tuto6/view_models/post_view_model.dart';
 import 'package:tuto6/view_models/theme_viewmodel.dart';
 import 'package:tuto6/views/new_post.dart';
 import 'package:tuto6/views/post_list.dart';
 import 'package:tuto6/views/settings.dart';
 
 //main.dart
-void main() {
-  initDatabase();
-  runApp(const MyApp());
-}
-
 final _router = GoRouter(
   initialLocation: '/',
   routes: [
@@ -30,36 +27,34 @@ final _router = GoRouter(
   ],
 );
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final databaseProvider = PostService();
+  await databaseProvider.initDatabase();
+  runApp(MyApp(postService: databaseProvider));
+}
 
-  // This widget is the root of your application.
+class MyApp extends StatelessWidget {
+  final PostService postService;
+
+  const MyApp({super.key, required this.postService});
+
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ThemeViewModel>(
-      create: (context) => ThemeViewModel(),
-      child: // Use the provider to get the theme
-      MaterialApp.router(
-        routerConfig: _router,
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          // This is the theme of your application.
-          //
-          // TRY THIS: Try running your application with "flutter run". You'll see
-          // the application has a purple toolbar. Then, without quitting the app,
-          // try changing the seedColor in the colorScheme below to Colors.green
-          // and then invoke "hot reload" (save your changes or press the "hot
-          // reload" button in a Flutter-supported IDE, or press "r" if you used
-          // the command line to start the app).
-          //
-          // Notice that the counter didn't reset back to zero; the application
-          // state is not lost during the reload. To reset the state, use hot
-          // restart instead.
-          //
-          // This works for code too, not just values: Most code changes can be
-          // tested with just a hot reload.
-          colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<PostViewModel>(
+          create: (context) => PostViewModel(postService),
         ),
+        ChangeNotifierProvider<ThemeViewModel>(
+          create: (context) => ThemeViewModel(),
+        ),
+      ],
+      child: MaterialApp.router(
+        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(),
+        routerConfig: _router,
       ),
     );
   }
